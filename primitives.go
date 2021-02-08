@@ -86,7 +86,7 @@ func Rectangle(r image.Rectangle, opts *RectangleOptions) Component {
 		strokeColor := opts.Border.Left.Color
 		stroke := opts.Border.Left.Width
 
-		line := Line(left+1, top, left+1, bottom, stroke, strokeColor)
+		line := Line(left, top, left, bottom, stroke, strokeColor)
 		line.Display(ctx)
 	}
 
@@ -362,4 +362,65 @@ func TriLine(x1, y1, x2, y2 float64, stroke int, c color.Color) Component {
 	return SimpleComponent(func(dctx *DisplayContext) {
 		dctx.DrawImage(emptyImage, op)
 	})
+}
+
+// RectVertices returns the vertices for a rectangle.
+func RectVertices(px0, py0, px1, py1 int, c color.Color) ([]ebiten.Vertex, []uint16) {
+	x0, y0 := float32(px0), float32(py0)
+	x1, y1 := float32(px1), float32(py1)
+
+	r0, g0, b0, a0 := c.RGBA()
+	clr := color.RGBA{uint8(r0), uint8(g0), uint8(b0), uint8(a0)}
+
+	r := float32(clr.R) / 0xff
+	g := float32(clr.G) / 0xff
+	b := float32(clr.B) / 0xff
+	a := float32(clr.A) / 0xff
+
+	return []ebiten.Vertex{
+		{
+			// bottom left
+			DstX:   x0,
+			DstY:   y1,
+			SrcX:   1,
+			SrcY:   1,
+			ColorR: r,
+			ColorG: g,
+			ColorB: b,
+			ColorA: a,
+		},
+		{
+			// top left
+			DstX:   x0,
+			DstY:   y0,
+			SrcX:   1,
+			SrcY:   1,
+			ColorR: r,
+			ColorG: g,
+			ColorB: b,
+			ColorA: a,
+		},
+		{
+			// top right
+			DstX:   x1,
+			DstY:   y0,
+			SrcX:   1,
+			SrcY:   1,
+			ColorR: r,
+			ColorG: g,
+			ColorB: b,
+			ColorA: a,
+		},
+		{
+			// bottom right
+			DstX:   x1,
+			DstY:   y1,
+			SrcX:   1,
+			SrcY:   1,
+			ColorR: r,
+			ColorG: g,
+			ColorB: b,
+			ColorA: a,
+		},
+	}, []uint16{0, 1, 2, 1, 2, 3}
 }

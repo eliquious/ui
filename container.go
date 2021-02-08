@@ -1,7 +1,6 @@
 package ui
 
 import (
-	"fmt"
 	"image"
 	"image/color"
 
@@ -33,8 +32,8 @@ func Container(r image.Rectangle, opts *ContainerOptions, children ...Component)
 		CenterY:   opts.CenterY,
 		Border:    opts.Border,
 	})
-	fmt.Printf("Margin=(%s) Padding=(%s)\n", opts.Margin, opts.Padding)
-	fmt.Printf("X=%d, Y=%d, W=%d, H=%d\n", x, y, w, h)
+	// fmt.Printf("Margin=(%s) Padding=(%s)\n", opts.Margin, opts.Padding)
+	// fmt.Printf("X=%d, Y=%d, W=%d, H=%d\n", x, y, w, h)
 
 	internalComponents := StackedComponent(children...)
 
