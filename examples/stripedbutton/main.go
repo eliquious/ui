@@ -33,7 +33,7 @@ func main() {
 		Padding:     ui.UniformQuad(6),
 	}))
 
-	display.Add(ui.InteractiveComponent(r,
+	display.Add(ui.ToggleButton(r,
 		ui.Rectangle(r, &ui.RectangleOptions{
 			Border:    ui.StrokeBorder(color.Black, 2),
 			FillColor: &color.RGBA{250, 250, 250, 255},
@@ -46,6 +46,9 @@ func main() {
 		}),
 		func() {
 			fmt.Println("Button clicked")
+		},
+		func() {
+			fmt.Println("Button released")
 		},
 	))
 

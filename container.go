@@ -84,3 +84,23 @@ func Container(r image.Rectangle, opts *ContainerOptions, children ...Component)
 		paddingCtx.DrawImage(bufferImage, &ebiten.DrawImageOptions{})
 	})
 }
+
+// BoxCorners draws corners on a box.
+func BoxCorners(width, height, crossLength float64, c color.RGBA) Component {
+	lines := []Component{
+		Line(0, 0, crossLength, 0, 2, c),                               // top left top
+		Line(0, 0, 0, crossLength, 2, c),                               // top left left
+		Line(0, float64(height), crossLength, float64(height), 2, c),   // bottom left top
+		Line(0, float64(height), 0, float64(height)-crossLength, 2, c), // bottom left left
+
+		Line(float64(width), 0, float64(width)-crossLength, 0, 2, c),                             // top right top
+		Line(float64(width), 0, float64(width), crossLength, 2, c),                               // top right right
+		Line(float64(width), float64(height), float64(width)-crossLength, float64(height), 2, c), // bottom right bottom
+		Line(float64(width), float64(height), float64(width), float64(height)-crossLength, 2, c), // bottom right right
+	}
+	return SimpleComponent(func(ctx *DisplayContext) {
+		for i := 0; i < len(lines); i++ {
+			lines[i].Display(ctx)
+		}
+	})
+}
