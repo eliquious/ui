@@ -4,8 +4,15 @@ import (
 	"image"
 )
 
+// Button combines the component and mouse handlers in one interface.
+type Button interface {
+	Component
+	MouseButtonHandler
+	MouseMoveHandler
+}
+
 // MomentaryButton creates an interactive component which responds to mouse events.
-func MomentaryButton(r image.Rectangle, defaultComponent Component, hover Component, pressed Component, onPress func(), onRelease func()) Component {
+func MomentaryButton(r image.Rectangle, defaultComponent Component, hover Component, pressed Component, onPress func(), onRelease func()) Button {
 	return &momentaryButton{r: r, defaultComponent: defaultComponent, hoverComponent: hover, pressedComponent: pressed, onPress: onPress, onRelease: onRelease}
 }
 
@@ -77,7 +84,7 @@ func (i *momentaryButton) OnMouseMove(x, y int) {
 }
 
 // ToggleButton creates an interactive component which responds to mouse events and toggles state.
-func ToggleButton(r image.Rectangle, defaultComponent Component, hover Component, pressed Component, onPress func(), onRelease func()) Component {
+func ToggleButton(r image.Rectangle, defaultComponent Component, hover Component, pressed Component, onPress func(), onRelease func()) Button {
 	return &toggleButton{r: r, defaultComponent: defaultComponent, hoverComponent: hover, pressedComponent: pressed, onPress: onPress, onRelease: onRelease}
 }
 
