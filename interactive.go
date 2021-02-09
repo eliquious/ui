@@ -11,8 +11,19 @@ type Button interface {
 	MouseMoveHandler
 }
 
-// MomentaryButton creates an interactive component which responds to mouse events.
-func MomentaryButton(r image.Rectangle, defaultComponent Component, hover Component, pressed Component, onPress func(), onRelease func()) Button {
+// ButtonState represents a button's internal state.
+type ButtonState bool
+
+// These are the two available button states.
+const (
+	ButtonDown ButtonState = true
+	ButtonUp               = false
+)
+
+// MomentaryButton creates an interactive component which responds to mouse events. The onPress function returns the state of the button that should be set after the function had completed.
+// Normally, the onPress function should always return true as the button state should remain pressed until the mouse button has released. However, during screen transitions, etc the
+// button state may require the button state to remain unpressed in true momentary fashion.
+func MomentaryButton(r image.Rectangle, defaultComponent Component, hover Component, pressed Component, onPress func() ButtonState, onRelease func()) Button {
 	return &momentaryButton{r: r, defaultComponent: defaultComponent, hoverComponent: hover, pressedComponent: pressed, onPress: onPress, onRelease: onRelease}
 }
 
@@ -22,11 +33,11 @@ type momentaryButton struct {
 	defaultComponent Component
 	hoverComponent   Component
 	pressedComponent Component
-	onPress          func()
+	onPress          func() ButtonState
 	onRelease        func()
 
 	mouseOver bool
-	pressed   bool
+	pressed   ButtonState
 }
 
 // Display renders the button. If the pressed and hover components are defined they will be rendered instead of the default component.
@@ -59,7 +70,7 @@ func (i *momentaryButton) OnMouseEvent(x, y int, evt MouseEvent) {
 			i.pressed = !i.pressed
 
 			if i.onPress != nil {
-				i.onPress()
+				i.pressed = i.onPress()
 			}
 		}
 	}
